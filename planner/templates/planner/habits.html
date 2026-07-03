@@ -1,0 +1,31 @@
+{% extends "planner/base.html" %}
+
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">{{ ui.habits_eyebrow }}</p>
+    <h1>{{ ui.habits_title }}</h1>
+  </div>
+  <a class="button primary" href="{% url 'habit_add' %}">{{ ui.new_habit }}</a>
+</section>
+
+<section class="grid-list">
+  {% for row in rows %}
+    <article class="panel item-panel">
+      <div>
+        <span class="status {% if row.done %}done{% else %}todo{% endif %}">{% if row.done %}{{ ui.done }}{% else %}{{ ui.todo }}{% endif %}</span>
+        <h2>{{ row.habit.title }}</h2>
+        <p>{% if row.habit.description %}{{ row.habit.description }}{% else %}{{ ui.active_routine }}{% endif %}</p>
+        <small>{{ row.habit.get_frequency_display }} · {{ row.habit.target_value }} {{ row.habit.target_unit }}</small>
+      </div>
+      <div class="actions">
+        <form method="post" action="{% url 'habit_toggle' row.habit.pk %}">{% csrf_token %}<button class="button primary" type="submit">{% if row.done %}{{ ui.uncheck }}{% else %}{{ ui.check }}{% endif %}</button></form>
+        <a class="button ghost" href="{% url 'habit_edit' row.habit.pk %}">{{ ui.edit }}</a>
+        <form method="post" action="{% url 'habit_delete' row.habit.pk %}">{% csrf_token %}<button class="button danger" type="submit">{{ ui.delete }}</button></form>
+      </div>
+    </article>
+  {% empty %}
+    <article class="empty">{{ ui.no_habit }}</article>
+  {% endfor %}
+</section>
+{% endblock %}

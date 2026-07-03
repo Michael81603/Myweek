@@ -1,0 +1,575 @@
+Cahier des charges
+Application MyWeek
+Gestion d'emploi du temps, tâches, habitudes et statistiques
+
+Version 1.0
+
+Thème sombre
+
+Préparé pour : Diamondra
+Date : 02/07/2026
+
+MVP Django
+
+MyWeek - Cahier des charges
+
+Sommaire
+1. Présentation du projet
+
+3
+
+2. Contexte et problématique
+
+3
+
+3. Objectifs du projet
+
+3
+
+4. Public cible
+
+3
+
+5. Périmètre du projet
+
+3
+
+6. Modules fonctionnels
+
+4
+
+6.1 Dashboard . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+6.2 Gestion des tâches . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+6.3 Gestion des habitudes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+6.4 Voir emploi du temps . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+6.5 Statistiques . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+6.6 Paramètres . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+
+7. Maquette et direction design
+
+5
+
+8. Exigences UX/UI
+
+6
+
+9. Règles de gestion
+
+6
+
+10. Modèle de données
+
+7
+
+11. Technologies proposées
+
+7
+
+12. Sécurité
+
+7
+
+13. MVP - Version minimale viable
+
+8
+
+14. Évolutions futures
+
+8
+
+15. Scénarios utilisateur
+
+8
+
+16. Planning de réalisation
+
+8
+
+17. Critères de validation
+
+9
+
+18. Conclusion
+
+9
+
+Application de gestion d'emploi du temps, de tâches et d'habitudes
+
+Page 2
+
+MyWeek - Cahier des charges
+
+1. Présentation du projet
+Le projet consiste à créer une application appelée MyWeek. Elle permet à l'utilisateur d'organiser sa
+semaine, de gérer ses tâches importantes, de suivre ses habitudes quotidiennes et de visualiser son
+emploi du temps sous forme de tableau hebdomadaire.
+But principal
+Aider l'utilisateur à mieux gérer son temps, rester organisé, garder ses priorités visibles et
+suivre sa progression personnelle chaque semaine.
+
+2. Contexte et problématique
+Beaucoup d'utilisateurs utilisent plusieurs outils séparés : agenda, notes, rappels, listes de tâches et
+applications d'habitudes. Cette dispersion peut provoquer des oublis, une mauvaise visibilité sur la
+semaine et une difficulté à suivre les progrès.
+MyWeek centralise ces besoins dans une seule interface simple, moderne et modifiable à tout moment.
+
+3. Objectifs du projet
+● Créer un emploi du temps hebdomadaire clair et facile à modifier.
+● Permettre l'ajout, la modification, la suppression et la validation des tâches.
+● Gérer les habitudes répétitives et suivre leur réalisation quotidienne.
+● Afficher des statistiques simples de productivité.
+● Proposer une interface moderne en thème sombre, utilisable sur ordinateur et mobile.
+
+4. Public cible
+L'application vise les étudiants, développeurs, entrepreneurs, freelances et toute personne qui veut
+mieux organiser sa semaine.
+Profil
+
+Utilisation typique
+
+Étudiant
+
+Planifier les cours, révisions, devoirs, examens et habitudes de travail.
+
+Entrepreneur
+
+Organiser les publications, rendez-vous, ventes, tâches importantes et objectifs.
+
+Développeur / freelance
+
+Suivre les projets, deadlines, sessions de code, apprentissage et routines.
+
+5. Périmètre du projet
+La première version se concentre sur les fonctionnalités essentielles. Les fonctions avancées comme
+l'IA, la synchronisation Google Calendar et les notifications complètes seront prévues pour les
+évolutions futures.
+Inclus dans la V1
+Dashboard, tâches, habitudes, emploi du temps,
+statistiques simples, design sombre
+
+Non prioritaire dans la V1
+IA, drag and drop avancé, comptes
+multi-utilisateurs, Google Calendar, app mobile
+native
+
+Application de gestion d'emploi du temps, de tâches et d'habitudes
+
+Page 3
+
+MyWeek - Cahier des charges
+
+6. Modules fonctionnels
+Module
+
+Description
+
+Dashboard
+
+Résumé de la semaine : tâches prévues, tâches terminées, habitudes faites,
+objectifs importants, prochaine tâche.
+
+Tâches
+
+Création, modification, suppression, priorité, date, heure, catégorie et statut.
+
+Habitudes
+
+Création d'habitudes répétitives, fréquence, suivi quotidien et progression
+hebdomadaire.
+
+Voir emploi du temps
+
+Affichage en tableau avec jours en colonnes, horaires en lignes et blocs
+colorés.
+
+Statistiques
+
+Suivi de productivité, tâches terminées, habitudes réalisées et graphique
+simple.
+
+Paramètres
+
+Préférences utilisateur : nom, thème, langue, notifications et réinitialisation
+des données.
+
+6.1 Dashboard
+Le dashboard est la page d'accueil. Il doit afficher un résumé rapide de la semaine et aider l'utilisateur
+à décider quoi faire ensuite.
+
+● Message de bienvenue : Bonjour Diamondra.
+● Cartes : tâches prévues, tâches terminées, habitudes faites, objectifs importants.
+● Prochaine tâche avec heure et priorité.
+● Tâches du jour et habitudes du jour.
+
+6.2 Gestion des tâches
+Une tâche représente une action ponctuelle à réaliser : réviser DevOps, publier une annonce, faire un
+rapport, aller à un rendez-vous.
+Champ
+
+Description
+
+Obligatoire
+
+Titre
+
+Nom court de la tâche.
+
+Oui
+
+Description
+
+Détails complémentaires.
+
+Non
+
+Date
+
+Jour prévu.
+
+Oui
+
+Heure début / fin
+
+Période de réalisation.
+
+Non
+
+Priorité
+
+Faible, moyenne ou importante.
+
+Oui
+
+Statut
+
+À faire, en cours, terminée.
+
+Oui
+
+6.3 Gestion des habitudes
+Une habitude est une action répétitive que l'utilisateur souhaite suivre : boire de l'eau, lire, faire du
+sport, prier, dormir avant 23h.
+
+● Ajouter, modifier et supprimer une habitude.
+● Définir une fréquence : tous les jours, certains jours, une fois par semaine ou personnalisée.
+● Cocher l'habitude comme faite chaque jour.
+
+Application de gestion d'emploi du temps, de tâches et d'habitudes
+
+Page 4
+
+MyWeek - Cahier des charges
+
+● Afficher la progression sous forme de points hebdomadaires.
+
+6.4 Voir emploi du temps
+L'affichage de l'emploi du temps doit ressembler à un tableau scolaire : les jours sont en colonnes, les
+horaires en lignes et les activités dans des blocs colorés.
+Horaires
+
+Lundi
+
+Mardi
+
+08:00
+12:00
+
+Anglais
+Mr Niaina
+
+DevOps
+Dr Fetra
+
+13:00
+17:00
+
+Linux /
+Windows
+Serveur
+Dr Fetra
+
+Linux /
+Windows
+Serveur
+Dr Fetra
+
+Mercredi
+
+Jeudi
+
+Vendredi
+
+DevOps
+Dr Fetra
+
+Anglais
+Mr Niaina
+
+Fonctions prévues : ajouter un cours ou une activité, modifier, supprimer, changer la couleur, naviguer
+entre les semaines et afficher la semaine actuelle.
+
+6.5 Statistiques
+Le module statistiques donne une vision rapide de la progression : tâches terminées, habitudes faites,
+productivité et meilleure habitude de la semaine.
+
+6.6 Paramètres
+Les paramètres permettent de gérer le nom de l'utilisateur, le thème, la langue, les notifications et la
+réinitialisation des données. Dans la V1, cette page peut rester simple.
+
+7. Maquette et direction design
+Le design demandé est un thème sombre moderne : fond sombre, cartes arrondies, accent vert
+émeraude, textes blancs et gris, interface propre et professionnelle.
+
+Application de gestion d'emploi du temps, de tâches et d'habitudes
+
+Page 5
+
+MyWeek - Cahier des charges
+
+Figure 1 - Aperçu de direction visuelle dark mode pour MyWeek.
+
+8. Exigences UX/UI
+Élément
+
+Exigence
+
+Thème
+
+Mode sombre moderne, premium, sobre et lisible.
+
+Navigation desktop
+
+Menu latéral avec Dashboard, Tâches, Habitudes, Voir emploi du temps,
+Statistiques, Paramètres.
+
+Navigation mobile
+
+Menu inférieur : Accueil, Tâches, Habitudes, Emploi du temps, Plus.
+
+Cartes
+
+Coins arrondis, bordure légère, ombre douce et contraste suffisant.
+
+Couleurs
+
+Vert émeraude comme couleur principale, accents bleu, violet, jaune et rouge.
+
+Usage
+
+Code couleur
+
+Fond principal
+
+#0F172A
+
+Sidebar
+
+#022C22
+
+Cartes
+
+#111827
+
+Bordures
+
+#1F2937
+
+Vert principal
+
+#22C55E
+
+Texte principal
+
+#F9FAFB
+
+Texte secondaire
+
+#9CA3AF
+
+9. Règles de gestion
+Application de gestion d'emploi du temps, de tâches et d'habitudes
+
+Page 6
+
+MyWeek - Cahier des charges
+
+● Une tâche doit obligatoirement avoir un titre.
+● Une tâche peut être marquée comme terminée à tout moment.
+● Une habitude ne peut être cochée qu'une seule fois par jour.
+● Une activité d'emploi du temps doit avoir un jour, une heure de début et une heure de fin.
+● Les statistiques doivent se mettre à jour automatiquement après chaque action.
+● Les éléments supprimés ne doivent plus apparaître dans l'interface.
+
+10. Modèle de données
+La base de données peut commencer avec quatre tables principales. Le compte utilisateur peut être
+ajouté plus tard si l'application devient multi-utilisateur.
+Table
+
+Champs principaux
+
+Task
+
+id, title, description, date, start_time, end_time, priority, status, category,
+is_important, created_at, updated_at
+
+Habit
+
+id, title, description, frequency, target_value, target_unit, reminder_time,
+is_active, created_at, updated_at
+
+HabitLog
+
+id, habit_id, date, is_done, value_done, created_at
+
+ScheduleItem
+
+id, title, subtitle, day, start_time, end_time, color, item_type, created_at,
+updated_at
+
+11. Technologies proposées
+Pour une première version simple et rapide, la stack recommandée est :
+Couche
+
+Technologie
+
+Raison
+
+Frontend
+
+HTML, CSS, JavaScript
+
+Simple, rapide, suffisant pour la V1.
+
+Backend
+
+Django
+
+Framework Python robuste avec formulaires, routes,
+sécurité et admin.
+
+Base de données
+
+SQLite
+
+Facile à démarrer localement, sans configuration
+lourde.
+
+Design
+
+CSS personnalisé
+
+Contrôle complet du thème sombre.
+
+Évolution possible : React + Django REST Framework + PostgreSQL pour une version plus
+professionnelle et scalable.
+
+12. Sécurité
+● Protection CSRF sur tous les formulaires Django.
+● Validation des champs côté serveur.
+● Gestion des erreurs utilisateur.
+● Protection contre les champs vides ou incohérents.
+● Authentification à prévoir dans une version future si l'application est mise en ligne.
+
+Application de gestion d'emploi du temps, de tâches et d'habitudes
+
+Page 7
+
+MyWeek - Cahier des charges
+
+13. MVP - Version minimale viable
+La V1 doit être simple mais fonctionnelle. Elle doit permettre à l'utilisateur d'utiliser l'application au
+quotidien sans attendre les fonctions avancées.
+Fonctionnalités MVP
+Dashboard, ajouter/modifier/supprimer/terminer une tâche, ajouter une habitude, cocher une
+habitude, voir l'emploi du temps, ajouter une activité et afficher des statistiques simples.
+
+14. Évolutions futures
+● Système de compte utilisateur.
+● Connexion Google Calendar.
+● Notifications avant les tâches.
+● Drag and drop dans l'emploi du temps.
+● Export PDF de l'emploi du temps.
+● Application mobile Android.
+● IA qui propose automatiquement un planning à partir des objectifs de la semaine.
+
+15. Scénarios utilisateur
+Scénario
+
+Étapes
+
+Ajouter une tâche
+
+Ouvrir Tâches, cliquer sur Ajouter, remplir le formulaire, enregistrer, voir la
+tâche dans la liste et le dashboard.
+
+Cocher une habitude
+
+Ouvrir Dashboard ou Habitudes, cocher l'habitude du jour, mettre à jour la
+progression et les statistiques.
+
+Voir l'emploi du temps
+
+Cliquer sur Voir emploi du temps, consulter le tableau hebdomadaire, ajouter ou
+modifier une activité si besoin.
+
+16. Planning de réalisation
+Jour
+
+Travail prévu
+
+Jour 1
+
+Créer le projet Django, configurer SQLite, créer les modèles.
+
+Jour 2
+
+Créer le dashboard, le menu et le design sombre de base.
+
+Jour 3
+
+Développer la gestion des tâches : ajouter, modifier, supprimer, terminer.
+
+Jour 4
+
+Développer les habitudes et le suivi quotidien.
+
+Jour 5
+
+Créer la page emploi du temps et l'ajout d'activités.
+
+Jour 6
+
+Créer les statistiques et améliorer le design.
+
+Jour 7
+
+Tester, corriger les erreurs et finaliser la V1.
+
+Application de gestion d'emploi du temps, de tâches et d'habitudes
+
+Page 8
+
+MyWeek - Cahier des charges
+
+17. Critères de validation
+● L'utilisateur peut ajouter, modifier, supprimer et terminer une tâche.
+● L'utilisateur peut créer et cocher une habitude.
+● L'emploi du temps s'affiche sous forme de tableau hebdomadaire.
+● Les statistiques changent après les actions utilisateur.
+● Le design sombre est lisible sur ordinateur et mobile.
+● Aucune erreur bloquante ne doit apparaître pendant l'utilisation normale.
+
+18. Conclusion
+MyWeek est un projet utile, simple à comprendre et intéressant à développer. Il combine trois besoins
+importants : planifier son emploi du temps, gérer ses tâches et suivre ses habitudes. La première
+version doit rester claire et fonctionnelle, puis l'application pourra évoluer avec des notifications, une
+synchronisation calendrier, un export PDF et une aide par IA.
+Résultat attendu
+Une application web en thème sombre, capable d'aider l'utilisateur à organiser sa semaine et
+à suivre sa progression de manière simple, rapide et visuelle.
+
+Application de gestion d'emploi du temps, de tâches et d'habitudes
+
+Page 9
+
+

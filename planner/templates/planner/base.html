@@ -1,0 +1,59 @@
+{% load static %}
+<!doctype html>
+<html lang="{{ current_language|default:'fr' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MyWeek</title>
+  <link rel="stylesheet" href="{% static 'planner/css/app.css' %}">
+</head>
+<body class="{% if not request.user.is_authenticated %}auth-body{% endif %}">
+  {% if request.user.is_authenticated %}
+    <aside class="sidebar">
+      <a class="brand" href="{% url 'dashboard' %}">
+        <img class="brand-logo" src="{% static 'planner/img/myweek-logo.svg' %}" alt="Logo MyWeek">
+        <span>
+          <strong>MyWeek</strong>
+          <small>{{ ui.tagline }}</small>
+        </span>
+      </a>
+      <nav class="nav">
+        <a class="{% if active_page == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">{{ ui.nav_dashboard }}</a>
+        <a class="{% if active_page == 'tasks' %}active{% endif %}" href="{% url 'tasks' %}">{{ ui.nav_tasks }}</a>
+        <a class="{% if active_page == 'habits' %}active{% endif %}" href="{% url 'habits' %}">{{ ui.nav_habits }}</a>
+        <a class="{% if active_page == 'schedule' %}active{% endif %}" href="{% url 'schedule' %}">{{ ui.nav_schedule }}</a>
+        <a class="{% if active_page == 'statistics' %}active{% endif %}" href="{% url 'statistics' %}">{{ ui.nav_statistics }}</a>
+        <a class="{% if active_page == 'settings' %}active{% endif %}" href="{% url 'settings' %}">{{ ui.nav_settings }}</a>
+      </nav>
+      <div class="account-box">
+        <span>{{ request.user.username }}</span>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit">{{ ui.logout }}</button>
+        </form>
+      </div>
+    </aside>
+  {% endif %}
+
+  <main class="{% if request.user.is_authenticated %}shell{% else %}auth-shell{% endif %}">
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  {% if request.user.is_authenticated %}
+    <nav class="bottom-nav">
+      <a class="{% if active_page == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">{{ ui.nav_home }}</a>
+      <a class="{% if active_page == 'tasks' %}active{% endif %}" href="{% url 'tasks' %}">{{ ui.nav_tasks }}</a>
+      <a class="{% if active_page == 'habits' %}active{% endif %}" href="{% url 'habits' %}">{{ ui.nav_habits }}</a>
+      <a class="{% if active_page == 'schedule' %}active{% endif %}" href="{% url 'schedule' %}">{{ ui.nav_planning }}</a>
+      <a class="{% if active_page == 'settings' %}active{% endif %}" href="{% url 'settings' %}">{{ ui.nav_more }}</a>
+    </nav>
+  {% endif %}
+</body>
+</html>

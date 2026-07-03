@@ -1,0 +1,172 @@
+{% extends "planner/base.html" %}
+
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">{{ ui.schedule_eyebrow }}</p>
+    <h1>{{ ui.week_from }} {{ week_start|date:"d/m" }} {{ ui.week_to }} {{ week_end|date:"d/m" }}</h1>
+  </div>
+  <div class="actions">
+    <a class="button ghost" href="{% url 'task_add' %}">{{ ui.add_task }}</a>
+    <a class="button ghost" href="{% url 'habit_add' %}">{{ ui.add_habit }}</a>
+    <a class="button ghost" href="{% url 'schedule_pdf' %}?week={{ week_start|date:'Y-m-d' }}">{{ ui.export_pdf }}</a>
+    <a class="button primary" href="{% url 'schedule_add' %}">{{ ui.add_activity }}</a>
+  </div>
+</section>
+
+<section class="schedule-nav">
+  <a class="button ghost" href="{% url 'schedule' %}?week={{ previous_week|date:'Y-m-d' }}">{{ ui.previous_week }}</a>
+  <a class="button ghost" href="{% url 'schedule' %}?week={{ current_week|date:'Y-m-d' }}">{{ ui.today }}</a>
+  <a class="button ghost" href="{% url 'schedule' %}?week={{ next_week|date:'Y-m-d' }}">{{ ui.next_week }}</a>
+</section>
+
+<section class="schedule-grid" style="--hour-count: {{ hour_rows|length }}">
+  <aside class="time-column">
+    <div class="day-header-spacer"></div>
+    <div class="time-slots">
+      {% for hour in hour_rows %}
+        <span>{{ hour.label }}</span>
+      {% endfor %}
+    </div>
+  </aside>
+
+  {% for column in columns %}
+    <article class="day-column">
+      <header>
+        <strong>{{ column.day.label }}</strong>
+        <span>{{ column.day.date|date:"d/m" }}</span>
+      </header>
+
+      <div class="day-timeline">
+        <div class="hour-lines">
+          {% for hour in hour_rows %}
+            <span></span>
+          {% endfor %}
+        </div>
+
+        <div class="schedule-slots">
+          {% for hour in hour_rows %}
+            <button class="schedule-slot" type="button" data-slot-menu="slot-{{ column.day.index }}-{{ hour.hour }}">
+              <span>{{ hour.label }}</span>
+            </button>
+            <div class="slot-menu" id="slot-{{ column.day.index }}-{{ hour.hour }}" style="--slot-start: {{ hour.start_minutes }};" hidden>
+              <strong>{{ column.day.label }} {{ column.day.date|date:"d/m" }} - {{ hour.label }}</strong>
+              <a href="{% url 'task_add' %}?date={{ column.day.date|date:'Y-m-d' }}&start_time={{ hour.value }}&end_time={{ hour.next_value }}&next={{ schedule_next_url|urlencode }}">{{ ui.add_slot_task }}</a>
+              <a href="{% url 'habit_add' %}?frequency=custom&custom_days={{ column.day.index }}&reminder_time={{ hour.value }}&next={{ schedule_next_url|urlencode }}">{{ ui.add_slot_habit }}</a>
+              <a href="{% url 'schedule_add' %}?day={{ column.day.index }}&start_time={{ hour.value }}&end_time={{ hour.next_value }}&next={{ schedule_next_url|urlencode }}">{{ ui.add_slot_activity }}</a>
+            </div>
+          {% endfor %}
+        </div>
+
+        {% for entry in column.timed_entries %}
+          {% if entry.kind == "activity" %}
+            <div class="schedule-entry schedule-item" style="--entry-start: {{ entry.start_minutes }}; --entry-duration: {{ entry.duration_minutes }}; --lane-left: {{ entry.lane_left }}; --lane-width: {{ entry.lane_width }}; --item-color: {{ entry.activity.color }};">
+              <small>{{ entry.activity.start_time|time:"H:i" }} - {{ entry.activity.end_time|time:"H:i" }}</small>
+              <strong>{{ entry.activity.title }}</strong>
+              {% if entry.activity.subtitle %}<span>{{ entry.activity.subtitle }}</span>{% endif %}
+              <div class="inline-actions">
+                <a href="{% url 'schedule_edit' entry.activity.pk %}">{{ ui.edit }}</a>
+                <form method="post" action="{% url 'schedule_delete' entry.activity.pk %}">
+                  {% csrf_token %}
+                  <button type="submit">{{ ui.delete }}</button>
+                </form>
+              </div>
+            </div>
+          {% elif entry.kind == "habit" %}
+            <div class="schedule-entry schedule-item schedule-habit {% if entry.done %}is-done{% endif %}" style="--entry-start: {{ entry.start_minutes }}; --entry-duration: {{ entry.duration_minutes }}; --lane-left: {{ entry.lane_left }}; --lane-width: {{ entry.lane_width }};">
+              <small>{{ ui.reminder }} {{ entry.habit.reminder_time|time:"H:i" }}</small>
+              <strong>{{ entry.habit.title }}</strong>
+              <span>{{ entry.habit.get_frequency_display }} · {% if entry.done %}{{ ui.done }}{% else %}{{ ui.to_do }}{% endif %}</span>
+              <div class="inline-actions">
+                <a href="{% url 'habit_edit' entry.habit.pk %}">{{ ui.edit }}</a>
+                {% if entry.is_today %}
+                  <form method="post" action="{% url 'habit_toggle' entry.habit.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">{% if entry.done %}{{ ui.uncheck }}{% else %}{{ ui.check }}{% endif %}</button>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+          {% elif entry.kind == "task" %}
+            <div class="schedule-entry schedule-item schedule-task priority-{{ entry.task.priority }} {% if entry.task.is_done %}is-done{% endif %}" style="--entry-start: {{ entry.start_minutes }}; --entry-duration: {{ entry.duration_minutes }}; --lane-left: {{ entry.lane_left }}; --lane-width: {{ entry.lane_width }};">
+              <small>
+                {% if entry.task.start_time and entry.task.end_time %}
+                  {{ entry.task.start_time|time:"H:i" }} - {{ entry.task.end_time|time:"H:i" }}
+                {% else %}
+                  {{ ui.at }} {{ entry.task.start_time|time:"H:i" }}
+                {% endif %}
+              </small>
+              <strong>{{ entry.task.title }}</strong>
+              <span>{{ entry.task.get_priority_display }} · {{ entry.task.get_status_display }}</span>
+              <div class="inline-actions">
+                <a href="{% url 'task_edit' entry.task.pk %}">{{ ui.edit }}</a>
+                {% if not entry.task.is_done %}
+                  <form method="post" action="{% url 'task_done' entry.task.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">{{ ui.finish }}</button>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if column.unscheduled_entries %}
+        <div class="unscheduled-list">
+          <strong>{{ ui.no_time }}</strong>
+          {% for entry in column.unscheduled_entries %}
+            {% if entry.kind == "habit" %}
+              <div class="schedule-item schedule-habit {% if entry.done %}is-done{% endif %}">
+                <small>{{ ui.routine }}</small>
+                <strong>{{ entry.habit.title }}</strong>
+                <span>{{ entry.habit.get_frequency_display }} · {% if entry.done %}{{ ui.done }}{% else %}{{ ui.to_do }}{% endif %}</span>
+              </div>
+            {% elif entry.kind == "task" %}
+              <div class="schedule-item schedule-task priority-{{ entry.task.priority }} {% if entry.task.is_done %}is-done{% endif %}">
+                <small>{{ ui.no_time }}</small>
+                <strong>{{ entry.task.title }}</strong>
+                <span>{{ entry.task.get_priority_display }} · {{ entry.task.get_status_display }}</span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if not column.timed_entries and not column.unscheduled_entries %}
+        <p class="muted small day-empty">{{ ui.free }}</p>
+      {% endif %}
+    </article>
+  {% endfor %}
+</section>
+
+<script>
+  document.addEventListener("click", function (event) {
+    const slotButton = event.target.closest("[data-slot-menu]");
+    const openMenus = document.querySelectorAll(".slot-menu:not([hidden])");
+
+    if (!slotButton && !event.target.closest(".slot-menu")) {
+      openMenus.forEach((menu) => menu.hidden = true);
+      return;
+    }
+
+    if (!slotButton) {
+      return;
+    }
+
+    const menu = document.getElementById(slotButton.dataset.slotMenu);
+    openMenus.forEach((openMenu) => {
+      if (openMenu !== menu) {
+        openMenu.hidden = true;
+      }
+    });
+    menu.hidden = !menu.hidden;
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      document.querySelectorAll(".slot-menu:not([hidden])").forEach((menu) => menu.hidden = true);
+    }
+  });
+</script>
+{% endblock %}

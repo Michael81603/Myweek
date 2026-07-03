@@ -1,0 +1,34 @@
+{% extends "planner/base.html" %}
+
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">{{ ui.stats_eyebrow }}</p>
+    <h1>{{ ui.stats_title }}</h1>
+  </div>
+</section>
+
+<section class="metric-grid">
+  <article class="metric-card"><span>{{ ui.productivity }}</span><strong>{{ productivity }}%</strong></article>
+  <article class="metric-card"><span>{{ ui.done_tasks }}</span><strong>{{ done_tasks }}/{{ total_tasks }}</strong></article>
+  <article class="metric-card"><span>{{ ui.checked_habits }}</span><strong>{{ habit_logs }}</strong></article>
+  <article class="metric-card"><span>{{ ui.best_habit }}</span><strong class="fit">{% if best_habit %}{{ best_habit.habit__title }}{% else %}-{% endif %}</strong></article>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <h2>{{ ui.daily_activity }}</h2>
+  </div>
+  <div class="chart">
+    {% for day in daily %}
+      <div class="bar-row">
+        <span>{{ day.label }}</span>
+        <div class="bar-track">
+          <i style="width: {% widthratio day.tasks|add:day.habits 10 100 %}%"></i>
+        </div>
+        <small>{{ day.tasks }} {{ ui.nav_tasks|lower }} · {{ day.habits }} {{ ui.nav_habits|lower }}</small>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

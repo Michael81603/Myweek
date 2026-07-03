@@ -1,0 +1,32 @@
+{% extends "planner/base.html" %}
+
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">{{ ui.settings_eyebrow }}</p>
+    <h1>{{ ui.settings_title }}</h1>
+  </div>
+</section>
+
+<section class="two-col">
+  <form class="form-panel" method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <label class="field">
+        <span>{{ field.label }}</span>
+        {{ field }}
+      </label>
+    {% endfor %}
+    <button class="button primary" type="submit">{{ ui.settings_save }}</button>
+  </form>
+
+  <article class="panel danger-zone">
+    <h2>{{ ui.settings_reset_title }}</h2>
+    <p class="muted">{{ ui.settings_reset_text }}</p>
+    <form method="post">
+      {% csrf_token %}
+      <button class="button danger" name="reset" value="1" type="submit">{{ ui.settings_reset_button }}</button>
+    </form>
+  </article>
+</section>
+{% endblock %}

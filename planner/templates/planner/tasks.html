@@ -1,0 +1,33 @@
+{% extends "planner/base.html" %}
+
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">{{ ui.tasks_eyebrow }}</p>
+    <h1>{{ ui.tasks_title }}</h1>
+  </div>
+  <a class="button primary" href="{% url 'task_add' %}">{{ ui.new_task }}</a>
+</section>
+
+<section class="task-list">
+  {% for task in tasks %}
+    <article class="task-card wide priority-{{ task.priority }}">
+      <div>
+        <span class="status {{ task.status }}">{{ task.get_status_display }}</span>
+        <h2>{{ task.title }}</h2>
+        <p>{% if task.description %}{{ task.description }}{% else %}{{ ui.no_detail }}{% endif %}</p>
+        <small>{{ task.date }}{% if task.start_time %} · {{ task.start_time|time:"H:i" }}{% endif %}{% if task.category %} · {{ task.category }}{% endif %}</small>
+      </div>
+      <div class="actions">
+        {% if not task.is_done %}
+          <form method="post" action="{% url 'task_done' task.pk %}">{% csrf_token %}<button class="button ghost" type="submit">{{ ui.finish }}</button></form>
+        {% endif %}
+        <a class="button ghost" href="{% url 'task_edit' task.pk %}">{{ ui.edit }}</a>
+        <form method="post" action="{% url 'task_delete' task.pk %}">{% csrf_token %}<button class="button danger" type="submit">{{ ui.delete }}</button></form>
+      </div>
+    </article>
+  {% empty %}
+    <article class="empty">{{ ui.no_task }}</article>
+  {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "planner/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="auth-card">
+  <a class="brand auth-brand" href="{% url 'login' %}">
+    <img class="brand-logo" src="{% static 'planner/img/myweek-logo.svg' %}" alt="Logo MyWeek">
+    <span>
+      <strong>MyWeek</strong>
+      <small>Ton espace personnel de semaine</small>
+    </span>
+  </a>
+  <div>
+    <p class="eyebrow">Connexion</p>
+    <h1>Revenir a ton planning</h1>
+  </div>
+
+  <form class="auth-form" method="post">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<p class="error">{{ form.non_field_errors|striptags }}</p>{% endif %}
+    {% for field in form %}
+      <label class="field">
+        <span>{{ field.label }}</span>
+        {{ field }}
+        {% if field.errors %}<small class="error">{{ field.errors|striptags }}</small>{% endif %}
+      </label>
+    {% endfor %}
+    <button class="button primary" type="submit">Se connecter</button>
+  </form>
+
+  <p class="auth-link">Pas encore de compte ? <a href="{% url 'signup' %}">Creer un compte</a></p>
+</section>
+{% endblock %}

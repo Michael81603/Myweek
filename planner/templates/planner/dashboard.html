@@ -1,0 +1,72 @@
+{% extends "planner/base.html" %}
+
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">{{ ui.dashboard_greeting }} {{ display_name }}</p>
+    <h1>{{ ui.dashboard_title }}</h1>
+  </div>
+  <a class="button primary" href="{% url 'task_add' %}">{{ ui.add_task }}</a>
+</section>
+
+<section class="metric-grid">
+  <article class="metric-card"><span>{{ ui.planned_tasks }}</span><strong>{{ stats.planned }}</strong></article>
+  <article class="metric-card"><span>{{ ui.done_tasks }}</span><strong>{{ stats.done }}</strong></article>
+  <article class="metric-card"><span>{{ ui.done_habits }}</span><strong>{{ stats.habits_done }}</strong></article>
+  <article class="metric-card"><span>{{ ui.important_goals }}</span><strong>{{ stats.important }}</strong></article>
+</section>
+
+<section class="two-col">
+  <article class="panel">
+    <div class="panel-head">
+      <h2>{{ ui.next_task }}</h2>
+      <a href="{% url 'tasks' %}">{{ ui.view_all }}</a>
+    </div>
+    {% if next_task %}
+      <div class="focus-task priority-{{ next_task.priority }}">
+        <p>{{ next_task.get_priority_display }}</p>
+        <h3>{{ next_task.title }}</h3>
+        <span>{{ next_task.date }}{% if next_task.start_time %} {{ ui.at }} {{ next_task.start_time|time:"H:i" }}{% endif %}</span>
+      </div>
+    {% else %}
+      <p class="muted">{{ ui.no_urgent_task }}</p>
+    {% endif %}
+  </article>
+
+  <article class="panel">
+    <div class="panel-head">
+      <h2>{{ ui.today_habits }}</h2>
+      <a href="{% url 'habits' %}">{{ ui.manage }}</a>
+    </div>
+    <div class="stack">
+      {% for row in habit_rows %}
+        <form class="habit-row" method="post" action="{% url 'habit_toggle' row.habit.pk %}">
+          {% csrf_token %}
+          <button class="check {% if row.done %}done{% endif %}" type="submit">{% if row.done %}OK{% else %}+{% endif %}</button>
+          <span>{{ row.habit.title }}</span>
+        </form>
+      {% empty %}
+        <p class="muted">{{ ui.add_habit_prompt }}</p>
+      {% endfor %}
+    </div>
+  </article>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <h2>{{ ui.today_tasks }}</h2>
+    <a href="{% url 'task_add' %}">{{ ui.add }}</a>
+  </div>
+  <div class="task-list compact">
+    {% for task in today_tasks %}
+      <div class="task-card">
+        <span class="status {{ task.status }}">{{ task.get_status_display }}</span>
+        <strong>{{ task.title }}</strong>
+        <small>{% if task.start_time %}{{ task.start_time|time:"H:i" }}{% else %}{{ ui.no_time }}{% endif %}</small>
+      </div>
+    {% empty %}
+      <p class="muted">{{ ui.nothing_today }}</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

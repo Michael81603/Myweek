@@ -1,0 +1,27 @@
+{% extends "planner/base.html" %}
+
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">{{ ui.edit_eyebrow }}</p>
+    <h1>{{ title }}</h1>
+  </div>
+</section>
+
+<form class="form-panel" method="post">
+  {% csrf_token %}
+  {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+  {% for field in form %}
+    <label class="field">
+      <span>{{ field.label }}</span>
+      {{ field }}
+      {% if field.errors %}<small class="error">{{ field.errors|striptags }}</small>{% endif %}
+    </label>
+  {% endfor %}
+  {% if form.non_field_errors %}<p class="error">{{ form.non_field_errors|striptags }}</p>{% endif %}
+  <div class="actions">
+    <button class="button primary" type="submit">Enregistrer</button>
+    <a class="button ghost" href="{% if next_url %}{{ next_url }}{% else %}{% url 'dashboard' %}{% endif %}">{{ ui.cancel }}</a>
+  </div>
+</form>
+{% endblock %}
